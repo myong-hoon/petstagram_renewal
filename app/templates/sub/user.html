@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Favicon link -->
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon/favicon.ico') }}">
+
+    <link rel="icon" href="{{ url_for('static', filename='images/favicon/favicon.ico') }}">
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <!-- main link -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <title>PETSTAGREM</title>
+    <script>
+        $(document).ready(function (){
+            if($("#my-name").text()==''){
+
+                $("#inner_menu03").show();
+            }
+            else{
+                
+                $("#my_img").show();
+                $("#inner_menu01").show();
+                $("#inner_menu04").show();
+            
+            }
+        });
+        
+
+function signIn(){
+        var form = $("form")[0];        
+        var formData = new FormData(form);
+
+        $.ajax({
+            cache : false,
+            url : "/login", // 요기에
+            processData: false,
+            contentType: false,
+            type : 'POST', 
+            data : formData, 
+            success : function(data) {
+                if (response['result'] == 'success') {
+                $.cookie('mytoken', response['token'], { path: '/' });
+                window.location.replace("/");
+            } else {
+                alert(response['msg']);
+            }
+            }
+        }); // $.ajax */    
+    }
+
+        $(function(){
+            $("#inner_menu01 dl dt").click(function(){
+                $(this).toggleClass("bold");
+                $(this).toggleClass("view");
+            });
+            $(".card-body-icon #like").click(function(){
+                $(this).removeClass("bi bi-suit-heart");
+                $(this).addClass("bi bi-suit-heart-fill");
+                $(this).css({"color": "red"});
+            });
+            $(".card-body-header img").click(function(){
+                $(this).toggleClass("down");
+                
+            });
+            //$(".card-body").mouseenter(function(){
+            //    $(".card-body-footer",this).slideToggle({bottom:0});
+            //})
+
+            setInterval(function(){
+                $("#slider img:last").fadeOut(200,function(){
+                    $("#slider img:last").prependTo("#slider");
+                    $("#slider img:last").show();
+                });
+                
+            },2000);
+            
+            $("#ad_conbox li").mouseenter(function(){
+                $("#hide01",this).show();
+            });
+            $("#ad_conbox li").mouseleave(function(){
+                $("#hide01",this).hide();
+            });
+
+            $(".nav_btn").click(function(){
+                let num = $(this).index()+1;
+                $(".nav_list").hide();
+                $('.nav_list.'+num).show();
+                return false;                
+            });
+            $(".nav_btn").click(function(){
+                if($("#my-name").text()==''){
+                $("#inner_menu01").hide();
+                $("#inner_menu02").hide();
+                $("#inner_menu03").show();
+                }
+                else{
+                    if($(".nav_list.2").css("display") == "block"){
+                $("#inner_menu01").hide();
+                $("#inner_menu03").hide();
+                $("#inner_menu02").show();
+                $("#inner_menu04").show();
+                
+                }else{
+                $("#inner_menu02").hide(); 
+                $("#inner_menu03").hide();
+                $("#inner_menu01").show();
+                $("#inner_menu04").show();
+                
+                }
+                
+            }
+            });
+                
+
+
+
+
+            
+
+            $("#slider").click(function(){
+                alert("이벤트가 종료 되었습니다. 감사합니다 :)")
+            });
+            
+        });
+        function move(temp){
+            window.location.replace(temp);
+        }
+        function reload(){
+            window.location.reload();
+        }
+        function sign_out(){
+            $.removeCookie('mytoken', { path: '/' });
+            alert("로그아웃")
+            window.location.replace("/");
+        }
+    </script>
+</head>
+
+<body>
+    <header>
+        <h1><a href="#"><img src="{{ url_for('static', filename='images/pet_logo.png') }}" alt="펫스타그램로고"></a></h1>
+        
+
+        <ul id="nav">
+            <li class="nav_btn"><a href="#">STORY</a></li>
+            <li id="shopp" class="nav_btn"><a href="#">SHOP</a></li>
+            <li class="nav_btn"><a href="#">LINK</a></li>
+            <li class="nav_btn"><a href="#">QUIZ</a></li>
+        </ul>
+    </header>
+    <div id="main">
+        <section id="side_bar">
+            <h1>BEST<i id="best_"class="bi bi-bookmark-heart"></i></h1>
+            
+
+            <div id="user">
+                <div id="user_img">
+                    <img src="{{ url_for('static', filename=user_info.img) }}"alt="본인이미지">
+                </div>
+                <p id="user-name"></p>
+            </div>
+
+            <div id="user">
+                <div id="user_img">
+                    <img src="{{ url_for('static', filename='images/user_img1.png') }}"alt="본인이미지">
+                </div>
+                <p id="user-name">@pkpk__max11</p>
+            </div>
+        </section>
+        <section id="section2">
+            <h1>PETSTAGRAM</h1>
+            <div id="search_box">
+                <input id="searsh" type="text" placeholder="#고양이#강아지">
+                <i class="bi bi-search"></i>
+            </div>
+            <div id="user">
+                <div id="my_img">
+                    <img src="{{ url_for('static', filename=user_info.img) }}"alt="본인이미지">
+                </div>
+                <p id="my-name">{{user_info.id}}</p>
+            </div>
+            <div id="inner_menu01" class="inner_menu">
+                <dl>
+                    <dt>
+                        <a onclick="move('post_upload')" target=”_blank” type="button" style="width: 100px;">
+                        <i class="bi bi-plus-square"></i>글 올리기</dt>
+                        </a>
+                    </dl>    
+                <dl>
+                    <dt><i class="bi bi-bookmark"></i>저장한 POST</dt>
+                    <dd>My 모아보기</dd>
+                    <dd>전체 보기</dd>
+                </dl>
+                    
+                <dl>
+                    <dt><i class="bi bi-person"></i>내정보</dt>
+                    <dd>내정보 수정</dd>
+                </dl>
+                    
+                <dl>
+                    <dt><i class="bi bi-chat"></i>문의사항</dt>
+                    <dd>고객센터</dd>
+                </dl>
+            </div>
+            <div id="inner_menu02" class="inner_menu">
+                <dl>
+                    <dt><i class="bi bi-basket"></i>장바구니</dt>
+                </dl>    
+                <dl>
+                    <dt><i class="bi bi-truck"></i>배송확인</dt>
+                </dl>
+                    
+                <dl>
+                    <dt><i class="bi bi-person-fill"></i>내정보</dt>
+                </dl>
+                    
+                
+            </div>
+            <div id="inner_menu03" class="inner_menu">
+                <dl>
+                    <button onclick="move('/login')">로그인
+                </dl>    
+            </div>
+            <div id="inner_menu04" class="inner_menu">
+                <dl>
+                    <button onclick="sign_out()">로그아웃
+                </dl>    
+            </div>
+        </section>
+        
+
+        <section2>
+
+            {{user_info}}
+            <br><br>
+            <br><br>
+            {{posts}}
+        </section2>
+        
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Favicon link -->
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon/favicon.ico') }}">
+    <link rel="icon" href="{{ url_for('static', filename='images/favicon/favicon.ico') }}">
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <!-- main link -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/post_upload.css') }}">
+    <title>post_upload</title>
+    <script>
+ 
+        function post_upload() {
+            $("#submit_label").css('display','block')
+            $("#submit").css('display','none')
+            
+            //id=title/content 값을 각가 변수에 저장
+            //id=file에 들어있는 파일을 file변수에 저장
+            //각 변수를 form_data 생성후 추가
+            let note = $("#note").val();
+            let file = $('#upload_file')[0].files[0];
+            let form_data = new FormData();
+            form_data.append("file_give", file);
+            form_data.append("note_give", note);
+            //ajax로 폼데이터 전송
+            $.ajax({
+                type: "POST",
+                url: "/post_upload",
+                data: form_data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alert(response["msg"])
+                    window.location.replace('/')
+                }
+            });
+        }
+
+        // 사진 미리보기함수
+        function preview() {
+            let img_result = 'false';
+
+            const reader = new FileReader();
+
+            reader.onload = (readerEvent) => {
+                document.querySelector("#img_section").setAttribute("src", readerEvent.target.result);
+                //파일을 읽는 이벤트가 발생하면 img_section의 src 속성을 readerEvent의 결과물로 대체함
+            };
+
+            document.querySelector("#upload_file").addEventListener("change", (changeEvent) => {
+                //upload_file 에 이벤트리스너를 장착
+
+                const imgFile = changeEvent.target.files[0];
+                reader.readAsDataURL(imgFile);
+                img_result = 'true'
+                //업로드한 이미지의 URL을 reader에 등록
+
+            })
+        }
+    </script>
+</head>
+<body>
+    <div id="container">
+        <div class="posting-box">
+
+            <img src="{{ url_for('static', filename='images/pet_mock.png') }}"
+                 id="img_section" style="width: 100%; height: 100%; max-width: 400px; max-height: 320px;">
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" id="upload_file" style="display: none">
+                <label for="upload_file" >업로드</label>
+            </div>
+            <script>
+                preview()
+            </script>
+
+
+        </div>
+
+        <!-- <form action="#"> -->
+
+            <div class="input-box message-box" style="display: block;text-align: center;">
+                <textarea placeholder="남기고싶은 메세지를 작성해주세요" id="note"></textarea>
+            </div>
+            <div class="button" style="display: block;text-align: center;"id ='submit'>
+                <!--                    간격조정 div-->
+                <div style="height: 10px">
+                </div>
+                <label onclick="post_upload()" style="padding: 20px"> 등록하기</label>
+                
+            </div>
+            <label style="display: none;"id='submit_label'> 등록중입니다. 이미지 용량이 큰 경우 시간이 오래 걸립니다.</label>
+
+    </div>
+</body>
+</html>
